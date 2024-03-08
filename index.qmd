@@ -275,7 +275,7 @@ println("x=",maxf |> Optim.minimizer,"のとき最大値",maxf |> Optim.minimum 
 - $\begin{pmatrix}
     a_n \\ b_n \\ c_n \\ d_n \\ e_n \\ f_n \\ g_n \\ h_n\\
     \end{pmatrix}=
-    \dfrac16\begin{pmatrix}
+    \dfrac1{6^{n-1}}\begin{pmatrix}
             0 &  1 &  0 &  2 &  0 &  1 &  0 &  2\\
             1 & 0 &  2 &  0 &  1 &  0 &  2 &  0 \\
             0 &  2 &  0 &  1 &  0 &  2 &  0 &  1\\
@@ -449,7 +449,7 @@ println( optimize(g, 3.0 , 4.0))
   
   + $0\leqq k\leqq \dfrac13$のとき
   
-    $$(x,y,z) = \left(k,\sqrt((1-2k)^2+k^2)\cos\theta,\sqrt((1-2k)^2+k^2)\sin\theta\right)$$
+    $$(x,y,z) = \left(k,\sqrt{(1-2k)^2+k^2}\cos\theta,\sqrt{(1-2k)^2+k^2}\sin\theta\right)$$
 
   + $\dfrac13\leqq k\leqq 1$のとき
 
