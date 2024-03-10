@@ -1,5 +1,5 @@
 ---
-title: "高校数学とJulia言語について"
+title: "大学入試（数学）とJulia言語"
 author: "清水　団　Dan Shimizu ([@dannchu](https://twitter.com/dannchu)) "
 date: "3/10/2024"
 jupyter: julia-1.10
@@ -591,6 +591,277 @@ for j =1:length(p)
 end
 ```
 
+
+
+{{< pagebreak >}}
+
+
+# 東京大（文系）2024・数学
+
+## 第1問
+
+
+
+::: {.callout-note}
+## 第1問・問題
+
+座標平面上で，放物線 $C : y=ax^{2}+bx+c$ が 2点 $\mathrm{P}(\cos{\theta},\ \sin{\theta}),\ \mathrm{Q}(-\cos{\theta},\ \sin{\theta})$を通り，点 $\text{P}$ と点 $\text{Q}$ のそれぞれにおいて円 $x^{2}+y^{2}=1$ と共通の接線を持っている。ただし， $0^{\circ}<\theta<90^{\circ}$ とする。
+
+(1)　$a,\ b,\ c$ を $s=\sin{\theta}$ を用いて表せ。
+
+(2)　放物線 $C$ と $x$ 軸で囲まれた図形の面積 $A$ を $s$ を用いて表せ。
+
+(3)　$A\geqq \sqrt{3}$ を示せ。
+
+:::
+
+
+::: {.callout-tip}
+## 変化を見てみよう
+
+- $f(x,\theta)=-\dfrac{1}{2\sin\theta}x^2+\dfrac{\sin^2\theta+1}{2\sin\theta}$
+
+- $\displaystyle A(\theta) = 2\int_0^{\cos\theta} f(x) dx$
+
+- $0<\theta<\dfrac{\pi}2$
+
+:::
+
+
+
+```{julia}
+#| code-fold: true
+#| code-summary: "Show the code"
+using Plots
+
+f(x , θ) = -x^2/(2sin(θ)) +(sin(θ)+1/sin(θ))/2
+
+plot(x->sqrt(1-x^2),aspectratio=true,label="x²+y²=1")
+plot!(x->f(x,π/6),label="y=f(x,π/6)")
+
+```
+
+```{julia}
+#| code-fold: true
+#| code-summary: "Show the code"
+using QuadGK,Plots
+
+f(x , θ) = -x^2/(2sin(θ)) +(sin(θ)+1/sin(θ))/2
+Aa(θ) = 2 * quadgk(x-> f(x,θ),0,sqrt(sin(θ)^2+1))[1]
+
+plot(x->Aa(x),xlim=(0.1,π/2),label="y=A(θ)")
+
+```
+
+```{julia}
+#| code-fold: true
+#| code-summary: "Show the code"
+using Optim,QuadGK
+
+f(x , θ) = -x^2/(2sin(θ)) +(sin(θ)+1/sin(θ))/2
+Aa(θ) = 2 * quadgk(x-> f(x,θ),0,sqrt(sin(θ)^2+1))[1]
+
+minA = optimize(Aa, 0.1, 1.4)
+
+```
+
+{{< pagebreak >}}
+
+
+## 第2問
+
+
+
+::: {.callout-note}
+## 第2問・問題
+
+
+以下の問に答えよ。必要ならば，$0.3<\log_{10}2<0.31$ であることを用いてよい。
+
+(1)　$5^{n}>10^{19}$ となる最小の自然数 $n$ を求めよ。
+
+(2)　$5^{m}+4^{m}>10^{19}$ となる最小の自然数 $m$ を求めよ.
+
+:::
+
+
+::: {.callout-tip}
+## 桁数を調べてみよう。
+
+- $f(m)= 5^m+4^m$
+  
+- $g(m)=\lfloor\log_{10}f(m)\rfloor + 1$
+
+
+:::
+
+
+
+```{julia}
+#| code-fold: true
+#| code-summary: "Show the code"
+
+f(m) = (BigInt(5))^m+(BigInt(4))^m
+
+g(m) =floor(log10(f(m)))+1 |>Int
+
+k =1
+while g(k) < 20
+    k += 1
+end
+k
+
+```
+
+
+{{< pagebreak >}}
+
+
+
+## 第3問
+
+
+
+::: {.callout-note}
+## 第3問・問題
+
+座標平面上に2点 $\mathrm{O}(0,\ 0),\ \mathrm{A}(0,\ 1)$ をとる。
+$x$ 軸上の2点 $\mathrm{P}(p,\ 0),\ \mathrm{Q}(q,\ 0)$が，次の条件
+ (i)，(ii)をともに満たすとする。
+
+ (i)　$0<p<1$ かつ $p<q$
+
+(ii)　線分 $\text{AP}$ の中点を $\text{M}$ とするとき， $\angle \mathrm{OAP}=\angle \mathrm{PMQ }$
+
+
+(1)　$q$ を $p$ を用いて表せ。
+
+
+(2)　$q=\dfrac{1}{3}$ となる $p$ の値を求めよ。
+
+(3)　$\triangle \mathrm{OAP}$ の面積を $S$，$\triangle \mathrm{PMQ}$ の面積を $T$ とする。$S>T$ となる $p$ の範囲を求めよ。
+
+
+<!-- 
+\dai
+$n$を5以上の奇数とする.\ 平面上の点 O を中心とする円をとり,\ それに内接する正 $n$角形を考える.\ $n$個の頂点から異なる $4$点を同時に選ぶ.\ ただし,\ どの 4 点も等確率で選ばれるものとする.\ 選んだ 4 点を頂点とする四角形が O を内部に含む確率 $p_{n}$を求めよ. -->
+
+
+:::
+
+
+::: {.callout-tip}
+## 変化を見てみよう。
+
+- $q = \dfrac{3p-p^3}{2(1-p^2)}$
+
+- $S=\dfrac12p$
+
+- $T=\dfrac14(q-p)$
+
+- $f(p) = S-T$
+  
+
+:::
+
+
+
+```{julia}
+#| code-fold: true
+#| code-summary: "Show the code"
+
+using Plots
+
+q(p) = (3p-p^3)/2/(1-p^2)
+
+S(p) =p/2
+
+T(p) = (q(p)-p)/4
+
+plot(S,xlim=(0.1,.9),label="y=S(p)")
+plot!(T,xlim=(0.1,.9),label="y=T(p)")
+
+```
+
+
+
+```{julia}
+#| code-fold: true
+#| code-summary: "Show the code"
+
+using Optim
+
+q(p) = (3p-p^3)/2/(1-p^2)
+
+S(p) =p/2
+
+T(p) = (q(p)-p)/4
+
+f(p) = S(p) - T(p)
+
+minf = optimize(x->abs(f(x)),.6,.8)
+
+```
+
+{{< pagebreak >}}
+
+
+## 第4問
+
+
+
+::: {.callout-note}
+## 第4問・問題
+
+$n$ を5以上の奇数とする。平面上の点 $\text{O}$ を中心とする円をとり，それに内接する正 $n$ 角形を考える。$n$ 個の頂点から異なる4点を同時に選ぶ。ただし，どの4点も等確率で選ばれるものとする。選んだ4点を頂点とする四角形が $\text{O}$ を内部に含む確率 $p_{n}$ を求めよ。
+
+
+:::
+
+
+::: {.callout-tip}
+## 確率を求める数列を作ってみよう。
+
+- 円周上から4点選ぶ。
+
+- この4点から3点選んで三角形を作ったとき，1つでも鋭角三角形ができればOK。
+
+- 4点を反時計回りに順番をつけ，最初と最後の点の差（4つある）がすべて$n/2$より大きいとき，四角形の内部に中心が含まれる。
+  
+- コンビネーションパッケージ`Combinatorics.jl`を利用
+
+:::
+
+
+
+```{julia}
+#| code-fold: true
+#| code-summary: "Show the code"
+using Combinatorics
+
+function N(n)
+    X = [i for i = 0:n-1]
+    Y = combinations(X,4) |> collect
+    p=0
+    for y in Y
+        k = [
+            mod(y[4]-y[1],n)
+            mod(y[1]-y[2],n)
+            mod(y[2]-y[3],n)
+            mod(y[3]-y[4],n)
+            ]
+        if minimum(k) > n/2
+            p += 1
+        end
+    end
+    p//length(Y)
+end
+
+for i=5:2:21
+    println("正",i,"角形のとき，確率は",N(i))
+end
+
+```
 
 
 {{< pagebreak >}}
